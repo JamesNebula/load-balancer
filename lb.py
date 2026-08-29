@@ -87,9 +87,7 @@ def handle_client(client_socket, client_address):
         return
     
     backend_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    
     backend_socket.connect(backend_address)
-
     backend_socket.send(raw_data)
 
     while True:
@@ -102,6 +100,7 @@ def handle_client(client_socket, client_address):
         print(f"Backend says: {chunk}")
 
     backend_socket.close()
+
     client_socket.close()
     print("Client connection closed")
 
