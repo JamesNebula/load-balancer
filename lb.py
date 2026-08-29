@@ -24,15 +24,12 @@ def health_check_worker(interval, url):
     while True:
         for backend in BACKENDS:
             address = backend['address']
-
             try:
                 healthcheck_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 healthcheck_socket.settimeout(2)
                 healthcheck_socket.connect(address)
                 healthcheck_socket.send(request)
                 response = healthcheck_socket.recv(1024).decode('utf-8')
-
-                #print(f"DEBUG response from {address}: {repr(response)}")
 
                 if '200 OK' in response:
                     backend['healthy'] = True
