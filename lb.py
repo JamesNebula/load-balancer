@@ -18,9 +18,6 @@ BACKENDS = [ # Change to list of dicts +++++++++
     {'address': ('127.0.0.1', 8082), 'healthy': True}
 ]
 
-current_index = 0
-lock = threading.Lock()
-
 def health_check_worker(interval, url):
     request = f"GET {url} HTTP/1.1\r\nHost: localhost\r\n\r\n".encode('utf-8')
 
@@ -53,12 +50,16 @@ def health_check_worker(interval, url):
 
         time.sleep(interval)
 
+current_index = 0
+lock = threading.Lock()
+
 def get_next_backend():
     global current_index
 
     with lock:
         for _ in range(len(BACKENDS)):
             backend = BACKENDS[current_index]
+
             if backend['healthy']:
                 current_index = (current_index + 1) % len(BACKENDS)
                 return backend['address']
